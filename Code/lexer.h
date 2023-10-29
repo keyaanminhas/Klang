@@ -3,11 +3,11 @@
 #include <string>
 #include <vector>
 #include <iostream>
-#include <utility>
+#include <tuple>
 
 
 
-typedef std::vector<std::pair<std::string, std::string>> TOKEN_TYPE;
+typedef std::vector<std::tuple<int, std::string, std::string>> TOKEN_TYPE;
 
 // LATER UPDATES SHALL INCLUDE 
 // - STRUCTS
@@ -27,5 +27,6 @@ const std::vector<std::string>::size_type OPERATORS_SIZE = OPERATORS.size();
 std::string tokenizer(TOKEN_TYPE& TOKEN_LIST, const std::string& RAW_CODE);
 bool is_keyword(const std::string& word);
 bool is_operator(const std::string& word);
-
+bool is_number(const std::string& word);
+void categorize(TOKEN_TYPE& TOKEN_LIST, const std::string& CURRENT, const int& LINE_NUMBER);
 #endif
