@@ -33,7 +33,7 @@
 	-- https://accu.org/journals/overload/26/145/balaam_2510/
 
 
-# STAGE 3: Writing My own Parser Tree:
+# STAGE 3: Writing My Own Parser:
 
 
 - PARSER TREE STRATEGY
