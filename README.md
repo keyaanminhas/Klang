@@ -1,5 +1,6 @@
 # STAGE BASE 0:
 
+- GENERAL BASE
 
 	Lexer/Tokenizer --> Parsing --> Abstract Syntax Tree OR Action Tree --> Compiling using LLVM or Transpiling(translating and compiling)
 
@@ -8,9 +9,11 @@
 
 # STAGE 1 SYNTAX-PLAN:
 
+- DECIDE SYNTAX
 
-	Decide Syntax....
 	This language will be a mock language for pseudocode.
+
+	CASE SENSITIVE WITH PSEUDOCODE GRAMMER.
 
 	https://learnlearn.uk/alevelcs/wp-content/uploads/sites/20/2020/09/9608_PSEUDOCODE_GUIDE.pdf
 
@@ -37,7 +40,7 @@
 	
 	Parser Tree to what I understand is Breaking Down of expressions. Also known as Recursive Descend Parser.
 
-	1. To create one create operand priority.
+	1. To create one create operant priority.
 	
 	2. Brackets, AND, OR, NOT, EQUAL, GREATER THAN, LESSER THAN, GREATER THAN EQUAL TO, LESSER THAN EQUAL TO, NOT EQUAL TO, Division, Multiplication, Addition, Subtraction
 
