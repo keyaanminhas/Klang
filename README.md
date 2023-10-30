@@ -1,4 +1,4 @@
-# STAGE BASE 0:
+# STAGE 0: Base-Plan:
 
 - GENERAL BASE
 
@@ -7,7 +7,7 @@
 	-- https://www.freecodecamp.org/news/the-programming-language-pipeline-91d3f449c919/ - Steps of creating a language.
 
 
-# STAGE 1 SYNTAX-PLAN:
+# STAGE 1: Syntax-Plan:
 
 - DECIDE SYNTAX
 
@@ -33,7 +33,7 @@
 	-- https://accu.org/journals/overload/26/145/balaam_2510/
 
 
-# STAGE 3 Writing My own Parser Tree:
+# STAGE 3: Writing My own Parser Tree:
 
 
 - PARSER TREE STRATEGY
