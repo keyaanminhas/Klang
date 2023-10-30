@@ -22,7 +22,7 @@
 
 
 
-- Lexer Strategy:-
+- LEXER STRATEGY
 
 	Create words Letter by Letter. Tokenize words into Keywords, Operators, String, Numbers, Identifiers.
 
@@ -36,7 +36,7 @@
 # STAGE 3 Writing My own Parser Tree:
 
 
-- Parser Tree Strategy:- 
+- PARSER TREE STRATEGY
 	
 	Parser Tree to what I understand is Breaking Down of expressions. Also known as Recursive Descend Parser.
 
