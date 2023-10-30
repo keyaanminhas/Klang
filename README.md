@@ -29,8 +29,9 @@
 	Strings ruined things a bit since they can have spaces between them.
 
 
-	-- https://archive.is/20230312193039/https://medium.com/young-coder/how-i-wrote-a-lexer-39f4f79d2980
-	-- https://accu.org/journals/overload/26/145/balaam_2510/
+	https://archive.is/20230312193039/https://medium.com/young-coder/how-i-wrote-a-lexer-39f4f79d2980
+	
+	https://accu.org/journals/overload/26/145/balaam_2510/
 
 
 # STAGE 3: Writing My Own Parser:
