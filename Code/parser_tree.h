@@ -13,16 +13,23 @@ typedef std::vector<std::tuple<int, std::string, std::string>> TOKEN_TYPE;
 
 
 struct node{
-    std::tuple<int, std::string, std::string> *dataptr = nullptr;
-    node *leftptr = nullptr;
-    node *rightptr = nullptr;
+    std::tuple<int, std::string, std::string> *dataptr;
+    node *leftptr;
+    node *rightptr;
     
+};
+
+struct base_node{
+    std::vector<std::tuple<int, std::string, std::string> *> * root;
+    node *leftptr;
+    node *rightptr;
+
 };
 
 class Tree{
     private:
     std::vector<std::vector<std::tuple<int, std::string, std::string> *>> m_lines;
-
+    std::vector<base_node *> base_nodes;
     public:
     Tree(TOKEN_TYPE TOKENS);
     void create();

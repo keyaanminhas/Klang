@@ -62,6 +62,7 @@ Tree::Tree(TOKEN_TYPE TOKENS){
 
 Tree::~Tree(){
     for (int i = 0; i != m_lines.size() ; i++){
+        delete base_nodes[i];
         for (int x = 0; x != m_lines[i].size(); x++)
         {
             delete m_lines[i][x];
@@ -83,6 +84,8 @@ void Tree::lines_display(){
 
 void Tree::create(){
     for (int i = 0; i!= m_lines.size(); i++){
-        
+        base_node* current_base = new base_node;
+        current_base->root = &m_lines[i];
+        base_nodes.push_back(current_base);
     }
 }
