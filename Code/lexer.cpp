@@ -1,7 +1,7 @@
 #include <string>
 #include <iostream>
 #include <vector>
-
+#include "parser_tree.h"
 #include <tuple>
 #include "lexer.h"
 
@@ -94,7 +94,7 @@ void categorize(TOKEN_TYPE& TOKEN_LIST, const std::string& CURRENT, const int& L
 int main(){
     std::string CODE = R"(DECLARE NUM : INTEGER\nDECLARE NAME : STRING\nNUM = 3.2\nNAME <-- "Keyaan Minhas")";
     tokenizer(TOKEN_LIST, CODE);
-    for (int i= 0; i != TOKEN_LIST.size(); i++){
-        std::cout << std::get<0>(TOKEN_LIST[i]) << " " << std::get<1>(TOKEN_LIST[i]) << " " << std::get<2>(TOKEN_LIST[i]) << std::endl;
-    }
+    Tree main_tree(TOKEN_LIST);
+    main_tree.lines_display();
+
 }
