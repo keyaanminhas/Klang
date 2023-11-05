@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 #include <tuple>
+#include <stdexcept>
 
 
 
@@ -21,15 +22,16 @@ struct node{
 
 struct base_node{
     std::vector<std::tuple<int, std::string, std::string> *> * root;
-    node *leftptr;
-    node *rightptr;
-
+    node *start;
 };
 
 class Tree{
     private:
     std::vector<std::vector<std::tuple<int, std::string, std::string> *>> m_lines;
     std::vector<base_node *> base_nodes;
+    void _recurse_node(node* current, std::vector<std::tuple<int, std::string, std::string> *>* data);
+    void _recurse_base_node(base_node* current);
+    void vec_split(std::vector<std::tuple<int, std::string, std::string> *>* arr, int till, std::vector<std::tuple<int, std::string, std::string> *>*  result1, std::vector<std::tuple<int, std::string, std::string> *>*  result2);
     public:
     Tree(TOKEN_TYPE TOKENS);
     void create();

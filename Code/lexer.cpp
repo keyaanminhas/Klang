@@ -92,9 +92,11 @@ void categorize(TOKEN_TYPE& TOKEN_LIST, const std::string& CURRENT, const int& L
 
 
 int main(){
-    std::string CODE = R"(DECLARE NUM : INTEGER\nDECLARE NAME : STRING\nNUM = 3.2\nNAME <-- "Keyaan Minhas")";
+    std::string CODE = R"(INPUT 3\nDECLARE NUM : INTEGER\nDECLARE NAME : STRING\nNUM = 3.2\nNAME <-- "Keyaan Minhas")";
     tokenizer(TOKEN_LIST, CODE);
     Tree main_tree(TOKEN_LIST);
+    main_tree.create();
     main_tree.lines_display();
 
+    return 0;
 }
