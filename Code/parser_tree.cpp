@@ -8,10 +8,10 @@
 
 
 /*
-DECLARE <IDENTIFIER> : DATATYPE/KEYWORD
-
 INPUT <IDENTIFIER>
 OUTPUT <IDENTIFIER> / <EXPRESSION> , <IDENTIFIER> / <EXPRESSION> 
+
+DECLARE <IDENTIFIER> : DATATYPE/KEYWORD
 
 IF <EXPRESSION> THEN
 <STATEMENTS> / <EXPRESSIONS>
@@ -106,7 +106,7 @@ void Tree::vec_split(std::vector<std::tuple<int, std::string, std::string> *>* a
 }
 
 void Tree::_recurse_node(node* current, std::vector<std::tuple<int, std::string, std::string> *>* data){
-    std::cout << "RECURSED" << std::endl;
+    // std::cout << "RECURSED" << std::endl;
     if ((*data).size() == 1){
         current->dataptr = (*data)[0];
         std::cout << std::get<2>(*(current->dataptr)) << std::endl;
@@ -124,10 +124,70 @@ void Tree::_recurse_node(node* current, std::vector<std::tuple<int, std::string,
                 std::vector<std::tuple<int, std::string, std::string> *> * result1 = new std::vector<std::tuple<int, std::string, std::string> *>;
                 std::vector<std::tuple<int, std::string, std::string> *> * result2 = new std::vector<std::tuple<int, std::string, std::string> *>;
                 vec_split(data, 1, result1, result2);
-                std::cout << result1->size() << result2->size();
                 _recurse_node(current->leftptr, result1);
                 _recurse_node(current->rightptr, result2);
             }
+        }
+        else if (std::get<2>(*(*data)[0]) == "OUTPUT"){
+            for (int i = 1; i!= (*data).size(); i++){
+                if (std::get<1>(*(*data)[i]) == "KW"){
+                    std::cout << std::string("ERROR -Line[") << std::to_string(std::get<0>(*(*data)[0])) << std::string("]: Keyword OUTPUT doesnt take Keywords!\n");
+                    exit(0);
+                }
+            }
+            current->leftptr = new node;
+            current->rightptr = new node;
+            std::vector<std::tuple<int, std::string, std::string> *> * result1 = new std::vector<std::tuple<int, std::string, std::string> *>;
+            std::vector<std::tuple<int, std::string, std::string> *> * result2 = new std::vector<std::tuple<int, std::string, std::string> *>;
+            vec_split(data, 1, result1, result2);
+            _recurse_node(current->leftptr, result1);
+            _recurse_node(current->rightptr, result2);
+        }
+
+        else if (std::get<2>(*(*data)[0]) == "DECLARE"){
+            if (std::get<1>(*(*data)[(*data).size()-1]) != "KW"){
+                std::cout << std::string("ERROR -Line[") << std::to_string(std::get<0>(*(*data)[0])) << std::string("]: Keyword DECLARE requires a DataType!\n");
+                exit(0);
+            }
+            if (std::get<2>(*(*data)[(*data).size()-2]) != ":"){
+                std::cout << std::string("ERROR -Line[") << std::to_string(std::get<0>(*(*data)[0])) << std::string("]: Keyword DECLARE expects ':' before DataType!\n");
+                exit(0);
+      
+            }
+            bool comma = false;
+            for (int i = 1; i!= (*data).size()-2; i++){
+                if (std::get<1>(*(*data)[i]) == "KW"){
+                    std::cout << std::string("ERROR -Line[") << std::to_string(std::get<0>(*(*data)[0])) << std::string("]: Keyword DECLARE doesnt take Keywords!\n");
+                    exit(0);
+                }
+
+                if (comma == false){
+                    if (std::get<1>(*(*data)[i]) != "ID"){
+                        std::cout << std::string("ERROR -Line[") << std::to_string(std::get<0>(*(*data)[0])) << std::string("]: Keyword DECLARE expected an Identifier!\n");
+                        exit(0);
+                    }
+                    else{
+                        comma = true;
+                    }
+                }
+                else if (comma == true){
+                    if (std::get<2>(*(*data)[i]) != ","){
+                        std::cout << std::string("ERROR -Line[") << std::to_string(std::get<0>(*(*data)[0])) << std::string("]: Keyword DECLARE expected a comma as a separator!\n");
+                        exit(0);
+                    }
+                    else{
+                        comma = false;
+                    } 
+                }
+
+            }
+            current->leftptr = new node;
+            current->rightptr = new node;
+            std::vector<std::tuple<int, std::string, std::string> *> * result1 = new std::vector<std::tuple<int, std::string, std::string> *>;
+            std::vector<std::tuple<int, std::string, std::string> *> * result2 = new std::vector<std::tuple<int, std::string, std::string> *>;
+            vec_split(data, 1, result1, result2);
+            _recurse_node(current->leftptr, result1);
+            _recurse_node(current->rightptr, result2);
         }
     }
 
