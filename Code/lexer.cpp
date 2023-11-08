@@ -3,10 +3,10 @@
 #include <vector>
 #include "parser_tree.h"
 #include <tuple>
+#include <fstream>
 #include "lexer.h"
 
 
-TOKEN_TYPE TOKEN_LIST;
 
 std::string tokenizer(TOKEN_TYPE& TOKEN_LIST, const std::string& RAW_CODE){
     std::string NEXT;
@@ -88,15 +88,4 @@ void categorize(TOKEN_TYPE& TOKEN_LIST, const std::string& CURRENT, const int& L
     else{
         TOKEN_LIST.push_back(std::tuple<int, std::string, std::string> (LINE_NUMBER, "ID", CURRENT));
     }
-}
-
-
-int main(){
-    std::string CODE = R"(INPUT num1\nDECLARE NUM , NUM2 , NUM3 , NUM4 : INTEGER\nDECLARE NAME : STRING\nNUM <-- 3.2\nNAME <-- "Keyaan Minhas")";
-    tokenizer(TOKEN_LIST, CODE);
-    Tree main_tree(TOKEN_LIST);
-    main_tree.create();
-    main_tree.lines_display();
-
-    return 0;
-}
+};

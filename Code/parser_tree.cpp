@@ -65,7 +65,7 @@ Tree::Tree(TOKEN_TYPE TOKENS){
 
 Tree::~Tree(){
     for (int i = 0; i != m_lines.size() ; i++){
-        delete base_nodes[i];
+        delete m_base_nodes[i];
         for (int x = 0; x != m_lines[i].size(); x++)
         {
             delete m_lines[i][x];
@@ -89,9 +89,10 @@ void Tree::create(){
     for (int i = 0; i!= m_lines.size(); i++){
         base_node* current_base = new base_node;
         current_base->root = &m_lines[i];
-        base_nodes.push_back(current_base);
+        m_base_nodes.push_back(current_base);
         _recurse_base_node(current_base);
     }
+    std::cout << m_IF_COUNT;
 }
 
 void Tree::vec_split(std::vector<std::tuple<int, std::string, std::string> *>* arr, int till,std::vector<std::tuple<int, std::string, std::string> *>* result1, std::vector<std::tuple<int, std::string, std::string> *>* result2){ 
@@ -107,15 +108,20 @@ void Tree::vec_split(std::vector<std::tuple<int, std::string, std::string> *>* a
 
 void Tree::_recurse_node(node* current, std::vector<std::tuple<int, std::string, std::string> *>* data){
     // std::cout << "RECURSED" << std::endl;
+    for (int i = 0; i != data->size(); i ++){
+        std::cout << std::get<2>(*(*data)[i]);
+    }
+    std::cout << std::endl;
     if ((*data).size() == 1){
         current->dataptr = (*data)[0];
-        std::cout << std::get<2>(*(current->dataptr)) << std::endl;
+        if (std::get<2>(*(current->dataptr)) == "ENDIF"){m_IF_COUNT--;std::cout << "reduced";}
+        // std::cout << std::get<2>(*(current->dataptr)) << std::endl;
     }
     else{
         if (std::get<2>(*(*data)[0]) == "INPUT"){
 
             if (std::get<1>(*(*data)[1]) != "ID") {
-                std::cout << std::string("ERROR -Line[") << std::to_string(std::get<0>(*(*data)[0])) << std::string("]: Keyword INPUT expected an Identifier!\n");
+                std::cout << std::string("ERROR -Line[") << std::to_string(std::get<0>(*(*data)[0])) << std::string("]: Keyword 'INPUT' expected an Identifier!\n");
                 exit(0);
             }
             else{
@@ -131,7 +137,7 @@ void Tree::_recurse_node(node* current, std::vector<std::tuple<int, std::string,
         else if (std::get<2>(*(*data)[0]) == "OUTPUT"){
             for (int i = 1; i!= (*data).size(); i++){
                 if (std::get<1>(*(*data)[i]) == "KW"){
-                    std::cout << std::string("ERROR -Line[") << std::to_string(std::get<0>(*(*data)[0])) << std::string("]: Keyword OUTPUT doesnt take Keywords!\n");
+                    std::cout << std::string("ERROR -Line[") << std::to_string(std::get<0>(*(*data)[0])) << std::string("]: Keyword 'OUTPUT' doesnt take Keywords!\n");
                     exit(0);
                 }
             }
@@ -146,24 +152,24 @@ void Tree::_recurse_node(node* current, std::vector<std::tuple<int, std::string,
 
         else if (std::get<2>(*(*data)[0]) == "DECLARE"){
             if (std::get<1>(*(*data)[(*data).size()-1]) != "KW"){
-                std::cout << std::string("ERROR -Line[") << std::to_string(std::get<0>(*(*data)[0])) << std::string("]: Keyword DECLARE requires a DataType!\n");
+                std::cout << std::string("ERROR -Line[") << std::to_string(std::get<0>(*(*data)[0])) << std::string("]: Keyword 'DECLARE' requires a DataType!\n");
                 exit(0);
             }
             if (std::get<2>(*(*data)[(*data).size()-2]) != ":"){
-                std::cout << std::string("ERROR -Line[") << std::to_string(std::get<0>(*(*data)[0])) << std::string("]: Keyword DECLARE expects ':' before DataType!\n");
+                std::cout << std::string("ERROR -Line[") << std::to_string(std::get<0>(*(*data)[0])) << std::string("]: Keyword 'DECLARE' expects ':' before DataType!\n");
                 exit(0);
       
             }
             bool comma = false;
             for (int i = 1; i!= (*data).size()-2; i++){
                 if (std::get<1>(*(*data)[i]) == "KW"){
-                    std::cout << std::string("ERROR -Line[") << std::to_string(std::get<0>(*(*data)[0])) << std::string("]: Keyword DECLARE doesnt take Keywords!\n");
+                    std::cout << std::string("ERROR -Line[") << std::to_string(std::get<0>(*(*data)[0])) << std::string("]: Keyword 'DECLARE' doesnt take Keywords!\n");
                     exit(0);
                 }
 
                 if (comma == false){
                     if (std::get<1>(*(*data)[i]) != "ID"){
-                        std::cout << std::string("ERROR -Line[") << std::to_string(std::get<0>(*(*data)[0])) << std::string("]: Keyword DECLARE expected an Identifier!\n");
+                        std::cout << std::string("ERROR -Line[") << std::to_string(std::get<0>(*(*data)[0])) << std::string("]: Keyword 'DECLARE' expected an Identifier!\n");
                         exit(0);
                     }
                     else{
@@ -172,7 +178,7 @@ void Tree::_recurse_node(node* current, std::vector<std::tuple<int, std::string,
                 }
                 else if (comma == true){
                     if (std::get<2>(*(*data)[i]) != ","){
-                        std::cout << std::string("ERROR -Line[") << std::to_string(std::get<0>(*(*data)[0])) << std::string("]: Keyword DECLARE expected a comma as a separator!\n");
+                        std::cout << std::string("ERROR -Line[") << std::to_string(std::get<0>(*(*data)[0])) << std::string("]: Keyword 'DECLARE' expected a comma as a separator!\n");
                         exit(0);
                     }
                     else{
@@ -186,6 +192,28 @@ void Tree::_recurse_node(node* current, std::vector<std::tuple<int, std::string,
             std::vector<std::tuple<int, std::string, std::string> *> * result1 = new std::vector<std::tuple<int, std::string, std::string> *>;
             std::vector<std::tuple<int, std::string, std::string> *> * result2 = new std::vector<std::tuple<int, std::string, std::string> *>;
             vec_split(data, 1, result1, result2);
+            _recurse_node(current->leftptr, result1);
+            _recurse_node(current->rightptr, result2);
+        }
+        else if (std::get<2>(*(*data)[0]) == "IF") 
+        {
+            if (std::get<2>(*(*data)[data->size() - 1]) != "THEN"){
+                std::cout << std::string("ERROR -Line[") << std::to_string(std::get<0>(*(*data)[0])) << std::string("]: Keyword 'IF' expected an expression and keyword 'THEN'!\n");
+                exit(0);              
+            }
+            for (int i = 1; i!= (*data).size()-1; i++){
+                if (std::get<1>(*(*data)[i]) == "KW"){
+                    std::cout << std::string("ERROR -Line[") << std::to_string(std::get<0>(*(*data)[0])) << std::string("]: Keyword 'IF' got a Keyword instead of an Expression!\n");
+                    exit(0);
+                }
+            }
+            m_IF_COUNT ++;
+            current->leftptr = new node;
+            current->rightptr = new node;
+            std::vector<std::tuple<int, std::string, std::string> *> * result1 = new std::vector<std::tuple<int, std::string, std::string> *>;
+            std::vector<std::tuple<int, std::string, std::string> *> * result2 = new std::vector<std::tuple<int, std::string, std::string> *>;
+            vec_split(data, 1, result1, result2);
+            result2->erase(result2->end());
             _recurse_node(current->leftptr, result1);
             _recurse_node(current->rightptr, result2);
         }

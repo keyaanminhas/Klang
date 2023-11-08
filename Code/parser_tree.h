@@ -28,7 +28,10 @@ struct base_node{
 class Tree{
     private:
     std::vector<std::vector<std::tuple<int, std::string, std::string> *>> m_lines;
-    std::vector<base_node *> base_nodes;
+    std::vector<base_node *> m_base_nodes;
+
+    short int m_IF_COUNT = 0;
+    short int m_WHILE_COUNT = 0;
     void _recurse_node(node* current, std::vector<std::tuple<int, std::string, std::string> *>* data);
     void _recurse_base_node(base_node* current);
     void vec_split(std::vector<std::tuple<int, std::string, std::string> *>* arr, int till, std::vector<std::tuple<int, std::string, std::string> *>*  result1, std::vector<std::tuple<int, std::string, std::string> *>*  result2);
