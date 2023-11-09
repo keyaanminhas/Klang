@@ -26,6 +26,7 @@ const std::vector<std::string>::size_type OPERATORS_SIZE = OPERATORS.size();
 
 
 std::string tokenizer(TOKEN_TYPE& TOKEN_LIST, const std::string& RAW_CODE);
+std::string tokenizer2(TOKEN_TYPE& TOKEN_LIST, const std::string& RAW_CODE);
 bool is_keyword(const std::string& word);
 bool is_operator(const std::string& word);
 bool is_number(const std::string& word);

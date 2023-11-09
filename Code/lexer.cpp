@@ -46,6 +46,109 @@ std::string tokenizer(TOKEN_TYPE& TOKEN_LIST, const std::string& RAW_CODE){
     return report;
 };
 
+
+
+
+std::string tokenizer2(TOKEN_TYPE& TOKEN_LIST,const std::string& RAW_CODE){
+    int i = 0;
+
+    bool start_string = false;
+    bool start_braces = false;
+    bool start_word = false;
+    bool start_operator = false;
+    bool start_number = false;
+    std::string current_word;
+
+    std::vector<std::string> temp_vec;
+
+
+    while (i != RAW_CODE.size()){
+        // if (RAW_CODE[i] == '"'){
+        //     start_string = !start_string;
+        // }
+        if (RAW_CODE[i] == ' '){
+            temp_vec.push_back(current_word);
+            current_word = "";
+            start_word = false;
+            start_number = false;
+            start_operator = false;
+        }
+        else if ((RAW_CODE[i] >= 'A' && RAW_CODE[i] <= 'Z') || (RAW_CODE[i] >= 'a' && RAW_CODE[i] <= 'z')){
+
+            if (start_word == false && start_operator == false && start_number == false){
+                start_word = true;
+                current_word += RAW_CODE[i];
+            }
+            else if (start_word == true){
+                current_word += RAW_CODE[i];
+            }
+            else if (start_number == true){
+                temp_vec.push_back(current_word);
+                current_word = RAW_CODE[i];
+                start_number = false;
+                start_word = true;
+            }
+            else if (start_operator == true){
+                temp_vec.push_back(current_word);
+                current_word = RAW_CODE[i];
+                start_operator = false;
+                start_word = true;                
+            }
+            
+        }
+        else if (isdigit(RAW_CODE[i]) || RAW_CODE[i] == '.'){
+            if (start_word == false && start_operator == false && start_number == false){
+                start_number = true;
+                current_word += RAW_CODE[i];
+            }
+            else if (start_number == true){
+                current_word += RAW_CODE[i];
+                
+            }
+            else if (start_word == true){
+                // temp_vec.push_back(current_word);
+                current_word += RAW_CODE[i];
+                // start_number = true;
+                // start_word = false;
+            }
+            else if (start_operator == true){
+                temp_vec.push_back(current_word);
+                current_word = RAW_CODE[i];
+                start_number = true;
+                start_operator = false;                
+            }
+        }
+        else{
+            if (start_word == false && start_operator == false && start_number == false){
+                start_operator = true;
+                current_word += RAW_CODE[i];
+            }
+            else if (start_operator == true){
+                current_word += RAW_CODE[i];
+            }
+            else if (start_word == true){
+                temp_vec.push_back(current_word);
+                current_word = RAW_CODE[i];
+                start_operator = true;
+                start_word = false;
+            }
+            else if (start_number == true){
+                temp_vec.push_back(current_word);
+                current_word = RAW_CODE[i];
+                start_operator = true;
+                start_number = false;                
+            }
+        }
+        i ++;
+    }
+    temp_vec.push_back(current_word);
+
+    for (int i = 0; i != temp_vec.size(); i++){
+        std::cout << temp_vec[i] << std::endl;
+    }
+    return std::string(" ");
+}
+
 bool is_keyword(const std::string& word){
     for(int i = 0; i != KEYWORDS_SIZE; i++){
         if (word == KEYWORDS[i]){

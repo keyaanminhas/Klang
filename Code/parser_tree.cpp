@@ -109,7 +109,7 @@ void Tree::vec_split(std::vector<std::tuple<int, std::string, std::string> *>* a
 void Tree::_recurse_node(node* current, std::vector<std::tuple<int, std::string, std::string> *>* data){
     // std::cout << "RECURSED" << std::endl;
     for (int i = 0; i != data->size(); i ++){
-        std::cout << std::get<2>(*(*data)[i]);
+        std::cout << std::get<2>(*(*data)[i])<< "   " << (std::get<2>(*(*data)[i]).size());
     }
     std::cout << std::endl;
     if ((*data).size() == 1){

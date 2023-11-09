@@ -11,7 +11,7 @@
 TOKEN_TYPE TOKEN_LIST;
 
 
-int main(){
+int main2(){
     std::ifstream code_file ("code.k");
     std::string working_code;
     if ( code_file.is_open() ) {
@@ -28,5 +28,28 @@ int main(){
     main_tree.create();
     // main_tree.lines_display();
 
+    return 0;
+}
+
+
+int main(){
+    std::ifstream code_file("code.k");
+    std::string working_code;
+    std::vector<std::string> code_lines;
+    if (code_file.is_open()){
+        char letter;
+        while (code_file) {
+            letter = code_file.get();
+            if (letter != '\n') working_code += letter;
+            else{
+                code_lines.push_back(working_code);
+                working_code = "";
+            }
+        }
+    }
+    code_lines.push_back(working_code);
+    for (int i = 0; i != code_lines.size(); i++)
+    tokenizer2(TOKEN_LIST, code_lines[i]);
+    
     return 0;
 }
