@@ -48,8 +48,15 @@ int main(){
         }
     }
     code_lines.push_back(working_code);
-    for (int i = 0; i != code_lines.size(); i++)
-    tokenizer2(TOKEN_LIST, code_lines[i]);
-    
+    for (int i = 0; i != code_lines.size(); i++){
+        std::cout << code_lines[i] << std::endl;
+        tokenizer2(TOKEN_LIST, code_lines[i], i+1);}
+
+    std::cout << "cmon";
+    TOKEN_LIST.erase(TOKEN_LIST.end());
+    std::cout << "cmon2";
+    Tree main_tree(TOKEN_LIST);
+    main_tree.create();
+    main_tree.lines_display();
     return 0;
 }

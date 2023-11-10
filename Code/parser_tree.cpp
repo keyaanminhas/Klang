@@ -75,10 +75,11 @@ Tree::~Tree(){
 
 
 void Tree::lines_display(){
+    std::cout << std::endl;
     for(int i = 0; i != m_lines.size() ; i++){
         for (int x = 0; x != m_lines[i].size(); x++)
         {
-            std::cout << std::get<0>(*m_lines[i][x]) << std::get<1>(*m_lines[i][x]) << std::get<2>(*m_lines[i][x]);
+            std::cout << std::get<0>(*m_lines[i][x]) << std::get<1>(*m_lines[i][x]) <<  std::get<2>(*m_lines[i][x]) << "   ";
         }
         std::cout << std::endl;
     }

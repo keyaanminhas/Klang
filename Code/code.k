@@ -1,10 +1,18 @@
 DECLARE NUM1 , NUM2 , NUM3 , NUM4 : INTEGER
+
+
 INPUT NUM1
 DECLARE NAME : STRING
+
+
 IF NUM1 = 3 THEN
 NUM1 <-- NUM1-1
+
+
 ELSE
-NUM1 <-- (1 + 3 -2*4) 
+NUM1 <-- (1 + 3 -2*4)
 ENDIF
+
+
 NUM <-- 3.2
 NAME <-- "Keyaan Minhas"
