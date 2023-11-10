@@ -93,7 +93,7 @@ void Tree::create(){
         m_base_nodes.push_back(current_base);
         _recurse_base_node(current_base);
     }
-    std::cout << m_IF_COUNT;
+    // std::cout << m_IF_COUNT;
 }
 
 void Tree::vec_split(std::vector<std::tuple<int, std::string, std::string> *>* arr, int till,std::vector<std::tuple<int, std::string, std::string> *>* result1, std::vector<std::tuple<int, std::string, std::string> *>* result2){ 
@@ -110,7 +110,7 @@ void Tree::vec_split(std::vector<std::tuple<int, std::string, std::string> *>* a
 void Tree::_recurse_node(node* current, std::vector<std::tuple<int, std::string, std::string> *>* data){
     // std::cout << "RECURSED" << std::endl;
     for (int i = 0; i != data->size(); i ++){
-        std::cout << std::get<2>(*(*data)[i])<< "   " << (std::get<2>(*(*data)[i]).size());
+        std::cout << std::get<2>(*(*data)[i]);//<< "   " << (std::get<2>(*(*data)[i]).size());
     }
     std::cout << std::endl;
     if ((*data).size() == 1){

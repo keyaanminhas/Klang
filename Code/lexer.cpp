@@ -61,8 +61,8 @@ std::string tokenizer2(TOKEN_TYPE& TOKEN_LIST,const std::string& RAW_CODE, const
 
     std::vector<std::string> temp_vec;
 
-    std::cout << "HERE";
-    while (i != RAW_CODE.size()){
+    while (i <= RAW_CODE.size()){
+        // std::cout << RAW_CODE[i];
         if (RAW_CODE[i] == '\n'){i++;continue;}
         if (RAW_CODE[i] == '"'){
             if (current_word != ""){
@@ -157,11 +157,18 @@ std::string tokenizer2(TOKEN_TYPE& TOKEN_LIST,const std::string& RAW_CODE, const
     }
     temp_vec.push_back(current_word);
 
-    for (int i = 0; i != temp_vec.size(); i++){
+    for (int i = 0; i != temp_vec.size()-1; i++){
         if (temp_vec[i] != ""){
+            // std::cout << temp_vec[i];
             categorize(TOKEN_LIST, temp_vec[i], line);
         }
     }
+
+    if (temp_vec[temp_vec.size()-1].size() > 1){
+        std::string weird_stuff = temp_vec[temp_vec.size()-1].substr(0, temp_vec[temp_vec.size()-1].size()-1);
+        categorize(TOKEN_LIST, weird_stuff, line);
+    }
+
     return std::string(" ");
 }
 

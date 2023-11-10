@@ -34,29 +34,31 @@ int main2(){
 
 int main(){
     std::ifstream code_file("code.k");
-    std::string working_code;
     std::vector<std::string> code_lines;
-    if (code_file.is_open()){
-        char letter;
-        while (code_file) {
-            letter = code_file.get();
-            if (letter != '\n') working_code += letter;
-            else{
-                code_lines.push_back(working_code);
-                working_code = "";
-            }
-        }
+    if (!code_file.is_open()) {
+        std::cerr << "Error opening the file!" << std::endl;
+        return 1; // Return an error code
     }
-    code_lines.push_back(working_code);
-    for (int i = 0; i != code_lines.size(); i++){
-        std::cout << code_lines[i] << std::endl;
-        tokenizer2(TOKEN_LIST, code_lines[i], i+1);}
 
-    std::cout << "cmon";
-    TOKEN_LIST.erase(TOKEN_LIST.end());
-    std::cout << "cmon2";
+    std::string line;
+    while (std::getline(code_file, line)) {
+        // Process each line as needed
+        std::cout << line << std::endl;
+        code_lines.push_back(line);
+        
+    }
+
+    // Close the file
+    code_file.close();
+
+
+    for (int i = 0; i != code_lines.size();i++){
+        if (code_lines[i] != ""){
+            tokenizer2(TOKEN_LIST, code_lines[i], i+1);
+        } 
+    }
     Tree main_tree(TOKEN_LIST);
-    main_tree.create();
     main_tree.lines_display();
+    main_tree.create();
     return 0;
 }
