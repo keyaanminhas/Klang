@@ -22,7 +22,6 @@ int main2(){
         else working_code+= "\\n";
         }
     }
-    std::cout << working_code;
     tokenizer(TOKEN_LIST, working_code);
     Tree main_tree(TOKEN_LIST);
     main_tree.create();
@@ -43,7 +42,6 @@ int main(){
     std::string line;
     while (std::getline(code_file, line)) {
         // Process each line as needed
-        std::cout << line << std::endl;
         code_lines.push_back(line);
         
     }
@@ -58,7 +56,7 @@ int main(){
         } 
     }
     Tree main_tree(TOKEN_LIST);
-    main_tree.lines_display();
+    // main_tree.lines_display();
     main_tree.create();
     return 0;
 }

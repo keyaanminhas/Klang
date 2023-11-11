@@ -18,6 +18,8 @@ IF <EXPRESSION> THEN
 
 ELSE
 <STATEMENTS> / <EXPRESSIONS>
+
+ELSE IF <EXPRESSION>
 ENDIF
 
 CASE OF <IDENTIFIER>
@@ -110,12 +112,12 @@ void Tree::vec_split(std::vector<std::tuple<int, std::string, std::string> *>* a
 void Tree::_recurse_node(node* current, std::vector<std::tuple<int, std::string, std::string> *>* data){
     // std::cout << "RECURSED" << std::endl;
     for (int i = 0; i != data->size(); i ++){
-        std::cout << std::get<2>(*(*data)[i]);//<< "   " << (std::get<2>(*(*data)[i]).size());
+        std::cout << std::get<2>(*(*data)[i]) << "   ";// << (std::get<2>(*(*data)[i]).size());
     }
     std::cout << std::endl;
     if ((*data).size() == 1){
         current->dataptr = (*data)[0];
-        if (std::get<2>(*(current->dataptr)) == "ENDIF"){m_IF_COUNT--;std::cout << "reduced";}
+        if (std::get<2>(*(current->dataptr)) == "ENDIF"){m_IF_COUNT--;}
         // std::cout << std::get<2>(*(current->dataptr)) << std::endl;
     }
     else{
@@ -218,6 +220,72 @@ void Tree::_recurse_node(node* current, std::vector<std::tuple<int, std::string,
             _recurse_node(current->leftptr, result1);
             _recurse_node(current->rightptr, result2);
         }
+        else if (std::get<2>(*(*data)[0]) == "ELSE" && std::get<2>(*(*data)[1]) == "IF" ) 
+        {
+            if (std::get<2>(*(*data)[data->size() - 1]) != "THEN"){
+                std::cout << std::string("ERROR -Line[") << std::to_string(std::get<0>(*(*data)[0])) << std::string("]: Keyword 'ELSE IF' expected an expression and keyword 'THEN'!\n");
+                exit(0);              
+            }
+            std::vector<std::tuple<int, std::string, std::string> *> * result1 = new std::vector<std::tuple<int, std::string, std::string> *>;
+            for (int i = 2; i!= (*data).size()-1; i++){
+                if (std::get<1>(*(*data)[i]) == "KW"){
+                    std::cout << std::string("ERROR -Line[") << std::to_string(std::get<0>(*(*data)[0])) << std::string("]: Keyword 'ELSE IF' got a Keyword instead of an Expression!\n");
+                    exit(0);
+                }
+                else{
+                    result1->push_back((*data)[i]);
+                }
+            }
+            current->leftptr = new node;
+            current->rightptr = new node;
+
+            current->leftptr->dataptr = ((*data)[0]);
+            current->rightptr->leftptr = new node;
+            current->rightptr->leftptr->dataptr = ((*data)[1]);
+            current->rightptr->rightptr = new node;
+
+
+
+            _recurse_node(current->rightptr->rightptr, result1);
+        }
+        else if (std::get<2>(*(*data)[0]) == "ELSE" && std::get<2>(*(*data)[1]) != "IF" ){
+            std::cout << std::string("ERROR -Line[") << std::to_string(std::get<0>(*(*data)[0])) << std::string("]: Keyword 'ELSE' does not take any parameters!\n");
+            exit(0);
+        }
+        else if (std::get<2>(*(*data)[0]) == "FOR"){
+            if (std::get<1>(*(*data)[1]) != "ID"){
+                std::cout << std::string("ERROR -Line[") << std::to_string(std::get<0>(*(*data)[0])) << std::string("]: Keyword 'FOR' expected an Identifier!\n");
+                exit(0);      
+            }
+            std::vector<std::tuple<int, std::string, std::string> *> * result1 = new std::vector<std::tuple<int, std::string, std::string> *>;
+            std::vector<std::tuple<int, std::string, std::string> *> * result2 = new std::vector<std::tuple<int, std::string, std::string> *>;
+            
+            current->leftptr = new node;
+            current->rightptr = new node;
+            vec_split(data, 1, result1, result2);
+            _recurse_node(current->leftptr, result1);
+
+            bool step = false;
+
+
+            for (int i = 0; i != result2->size(); i++){
+                if (std::get<2>(*(*result2)[i]) == "STEP"){
+                    std::vector<std::tuple<int, std::string, std::string> *> * result3 = new std::vector<std::tuple<int, std::string, std::string> *>;
+                    std::vector<std::tuple<int, std::string, std::string> *> * result4 = new std::vector<std::tuple<int, std::string, std::string> *>;
+                    vec_split(result2, i, result3, result4);
+                    current->rightptr->leftptr = new node;
+                    current->rightptr->rightptr = new node;
+                    _recurse_node(current->rightptr->leftptr, result3);
+                    _recurse_node(current->rightptr->rightptr, result4);
+
+                    step = true;
+                    break;
+                }
+            }
+            if (step == false){
+                _recurse_node(current-> rightptr, result2);
+            }
+        }
     }
 
 }
@@ -225,5 +293,3 @@ void Tree::_recurse_base_node(base_node* current){
     (*current).start = new node;
     Tree::_recurse_node(current->start, current->root);
 }
-
-

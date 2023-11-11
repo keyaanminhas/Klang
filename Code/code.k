@@ -9,12 +9,17 @@ IF NUM1 = 3 THEN
 NUM1 <-- NUM1-1
 
 
+ELSE IF NUM1 > NUM2 THEN
+NUM2 <-- NUM1
+
 ELSE
 NUM1 <-- (1 + 3 -2*4)
+
 ENDIF
 
 
 NUM <-- 3.2
 NAME <--      "Keyaan Minhas"
 
+FOR COUNT <-- 100 TO 1 STEP 2
 
