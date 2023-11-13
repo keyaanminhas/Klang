@@ -23,3 +23,13 @@ NAME <--      "Keyaan Minhas"
 
 FOR COUNT <-- 100 TO 1 STEP 2
 
+NEXT
+
+WHILE X <> 5 DO
+HELLO <-- "KEYAAN"
+ENDWHILE
+
+REPEAT
+
+
+UNTIL X <> 5

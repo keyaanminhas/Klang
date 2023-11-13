@@ -268,7 +268,7 @@ void Tree::_recurse_node(node* current, std::vector<std::tuple<int, std::string,
             bool step = false;
 
 
-            for (int i = 0; i != result2->size(); i++){
+            for (int i = 0; i != result2->size() -1; i++){
                 if (std::get<2>(*(*result2)[i]) == "STEP"){
                     std::vector<std::tuple<int, std::string, std::string> *> * result3 = new std::vector<std::tuple<int, std::string, std::string> *>;
                     std::vector<std::tuple<int, std::string, std::string> *> * result4 = new std::vector<std::tuple<int, std::string, std::string> *>;
@@ -285,6 +285,61 @@ void Tree::_recurse_node(node* current, std::vector<std::tuple<int, std::string,
             if (step == false){
                 _recurse_node(current-> rightptr, result2);
             }
+        }
+        else if (std::get<2>(*(*data)[0]) == "STEP"){
+            current->rightptr = new node;
+            current->leftptr = new node;
+
+            std::vector<std::tuple<int, std::string, std::string> *> * result1 = new std::vector<std::tuple<int, std::string, std::string> *>;
+            std::vector<std::tuple<int, std::string, std::string> *> * result2 = new std::vector<std::tuple<int, std::string, std::string> *>;
+            vec_split(data, 1, result1, result2);
+            _recurse_node(current->leftptr, result1);
+            _recurse_node(current->rightptr, result2);
+
+        }        
+        else if (std::get<2>(*(*data)[0]) == "WHILE"){
+
+            if (std::get<2>(*(*data)[(*data).size()-1]) != "DO"){
+                std::cout << std::string("ERROR -Line[") << std::to_string(std::get<0>(*(*data)[0])) << std::string("]: Keyword 'WHILE' expected a KEYWORD 'DO'!\n");
+                exit(0);      
+            }
+
+
+
+            current->rightptr = new node;
+            current->leftptr = new node;
+
+            std::vector<std::tuple<int, std::string, std::string> *> * result1 = new std::vector<std::tuple<int, std::string, std::string> *>;
+            std::vector<std::tuple<int, std::string, std::string> *> * result2 = new std::vector<std::tuple<int, std::string, std::string> *>;
+            vec_split(data, 1, result1, result2);
+            result2->erase(result2->end());
+            _recurse_node(current->leftptr, result1);
+            _recurse_node(current->rightptr, result2);
+        }
+        else if (std::get<2>(*(*data)[0]) == "UNTIL"){
+
+
+            current->rightptr = new node;
+            current->leftptr = new node;
+
+            std::vector<std::tuple<int, std::string, std::string> *> * result1 = new std::vector<std::tuple<int, std::string, std::string> *>;
+            std::vector<std::tuple<int, std::string, std::string> *> * result2 = new std::vector<std::tuple<int, std::string, std::string> *>;
+            vec_split(data, 1, result1, result2);
+            _recurse_node(current->leftptr, result1);
+            _recurse_node(current->rightptr, result2);
+        }
+        else if ((std::get<1>(*(*data)[0]) == "ID") && (std::get<2>(*(*data)[1]) == "<--")){
+            current->leftptr = new node;
+            current->rightptr = new node;
+            current->leftptr->dataptr = (*data)[0];
+            current->rightptr->leftptr = new node;
+            current->rightptr->leftptr->dataptr = (*data)[1];
+            current->rightptr->rightptr = new node;
+            std::vector<std::tuple<int, std::string, std::string> *> * result1 = new std::vector<std::tuple<int, std::string, std::string> *>;
+            std::vector<std::tuple<int, std::string, std::string> *> * result2 = new std::vector<std::tuple<int, std::string, std::string> *>;
+            vec_split(data, 2, result1, result2);            
+            _recurse_node(current->rightptr->rightptr, result2);
+
         }
     }
 
