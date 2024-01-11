@@ -66,6 +66,10 @@ Tree::Tree(TOKEN_TYPE TOKENS){
 
 
 Tree::~Tree(){
+    std::cout << "\n\n\n\n\n\n";
+
+    std::cout << m_code_generated << std::endl; 
+
     for (int i = 0; i != m_lines.size() ; i++){
         delete m_base_nodes[i];
         for (int x = 0; x != m_lines[i].size(); x++)
@@ -74,6 +78,7 @@ Tree::~Tree(){
         }
     }
 }
+
 
 
 void Tree::lines_display(){
@@ -109,6 +114,7 @@ void Tree::vec_split(std::vector<std::tuple<int, std::string, std::string> *>* a
     }
 }
 
+
 void Tree::_recurse_node(node* current, std::vector<std::tuple<int, std::string, std::string> *>* data){
     // std::cout << "RECURSED" << std::endl;
     for (int i = 0; i != data->size(); i ++){
@@ -128,6 +134,18 @@ void Tree::_recurse_node(node* current, std::vector<std::tuple<int, std::string,
                 exit(0);
             }
             else{
+                bool flag = false;
+                for (int i = 0; i!= m_var_list.size(); i++ ){
+                    if (std::get<0>(m_var_list[i]) == std::get<2>(*(*data)[1])){
+                        flag = true;
+                        if (std::get<1>(m_var_list[i]) == "STR"){m_code_generated = m_code_generated + "std::getline(std::cin," + std::string(std::get<1>(m_var_list[i])) + ");\n";}
+                        else if (std::get<1>(m_var_list[i]) == "INT" || std::get<1>(m_var_list[i]) == "REAL"){m_code_generated = m_code_generated + "std::cin >> " + std::get<1>(m_var_list[i]) + ";\n";}
+                    }
+                }
+                if (flag == false){
+                    std::cout << std::string("ERROR -Line[") << std::to_string(std::get<0>(*(*data)[0])) << std::string("]: 'Identifier' was not declared!\n");
+                    exit(0);
+                }
                 current->leftptr = new node;
                 current->rightptr = new node;
                 std::vector<std::tuple<int, std::string, std::string> *> * result1 = new std::vector<std::tuple<int, std::string, std::string> *>;
@@ -138,12 +156,29 @@ void Tree::_recurse_node(node* current, std::vector<std::tuple<int, std::string,
             }
         }
         else if (std::get<2>(*(*data)[0]) == "OUTPUT"){
+
             for (int i = 1; i!= (*data).size(); i++){
                 if (std::get<1>(*(*data)[i]) == "KW"){
                     std::cout << std::string("ERROR -Line[") << std::to_string(std::get<0>(*(*data)[0])) << std::string("]: Keyword 'OUTPUT' doesnt take Keywords!\n");
                     exit(0);
                 }
+                else if (std::get<1>(*(*data)[i]) == "ID"){
+                    for (int i = 0; i != m_var_list.size(); i++){
+                        if (std::get<0>(m_var_list[i]) == std::get<2>(*(*data)[i])){
+                            m_code_generated = m_code_generated + std::get<2>(*(*data)[i]);
+                        }
+                    }
+                }
+                else if (std::get<2>(*(*data)[i]) == ","){
+                    m_code_generated = m_code_generated + " << ";
+
+                }
+                else{
+                    m_code_generated = m_code_generated + std::get<2>(*(*data)[i]);
+                }
             }
+            m_code_generated = m_code_generated + " << std::endl;\n";
+            
             current->leftptr = new node;
             current->rightptr = new node;
             std::vector<std::tuple<int, std::string, std::string> *> * result1 = new std::vector<std::tuple<int, std::string, std::string> *>;
@@ -152,7 +187,6 @@ void Tree::_recurse_node(node* current, std::vector<std::tuple<int, std::string,
             _recurse_node(current->leftptr, result1);
             _recurse_node(current->rightptr, result2);
         }
-
         else if (std::get<2>(*(*data)[0]) == "DECLARE"){
             if (std::get<1>(*(*data)[(*data).size()-1]) != "KW"){
                 std::cout << std::string("ERROR -Line[") << std::to_string(std::get<0>(*(*data)[0])) << std::string("]: Keyword 'DECLARE' requires a DataType!\n");
@@ -339,7 +373,6 @@ void Tree::_recurse_node(node* current, std::vector<std::tuple<int, std::string,
             std::vector<std::tuple<int, std::string, std::string> *> * result2 = new std::vector<std::tuple<int, std::string, std::string> *>;
             vec_split(data, 2, result1, result2);            
             _recurse_node(current->rightptr->rightptr, result2);
-
         }
     }
 
@@ -348,3 +381,6 @@ void Tree::_recurse_base_node(base_node* current){
     (*current).start = new node;
     Tree::_recurse_node(current->start, current->root);
 }
+
+// void Tree::tree_display(){
+// }
