@@ -202,6 +202,7 @@ void Tree::_recurse_node(node* current, std::vector<std::tuple<int, std::string,
                 exit(0);
       
             }
+            
 
             std::string data_type = std::get<2>(*(*data)[(*data).size()-1]);
             std::cout << data_type << std::endl;
@@ -234,6 +235,18 @@ void Tree::_recurse_node(node* current, std::vector<std::tuple<int, std::string,
                     }
                     else{
                         comma = true;
+                        bool found = false;
+                        for (int j = 0; j != m_var_list.size(); j++){
+                            if (std::get<0>(m_var_list[j]) == std::get<2>(*(*data)[0])){
+                                m_code_generated += std::get<2>(*(*data)[0]);
+                                found = true;
+                                break;
+                            }
+                        }
+                        if (found == true){
+                            std::cout << std::string("ERROR -Line[") << std::to_string(std::get<0>(*(*data)[0])) << std::string("]: Redelaration not allowed!\n");
+                            exit(0);
+                        }
                     }
                 }
                 else if (comma == true){
@@ -336,6 +349,8 @@ void Tree::_recurse_node(node* current, std::vector<std::tuple<int, std::string,
                 std::cout << std::string("ERROR -Line[") << std::to_string(std::get<0>(*(*data)[0])) << std::string("]: Keyword 'FOR' expected an Identifier!\n");
                 exit(0);      
             }
+
+            m_var_list.push_back(std::tuple<std::string, std::string>{std::get<2>(*(*data)[1]), "INTEGER"});
             std::vector<std::tuple<int, std::string, std::string> *> * result1 = new std::vector<std::tuple<int, std::string, std::string> *>;
             std::vector<std::tuple<int, std::string, std::string> *> * result2 = new std::vector<std::tuple<int, std::string, std::string> *>;
             
@@ -468,6 +483,28 @@ void Tree::_recurse_node(node* current, std::vector<std::tuple<int, std::string,
             _recurse_node(current->rightptr, result2);
         }
         else if ((std::get<1>(*(*data)[0]) == "ID") && (std::get<2>(*(*data)[1]) == "<--")){
+            bool found = false;
+            for (int j = 0; j != m_var_list.size(); j++){
+                if (std::get<0>(m_var_list[j]) == std::get<2>(*(*data)[0])){
+                    m_code_generated += std::get<2>(*(*data)[0]) + " = ";
+                    found = true;
+                    break;
+                }
+            }
+            if (found == false){
+                std::cout << std::string("ERROR -Line[") << std::to_string(std::get<0>(*(*data)[0])) << std::string("]: Variable missing delaration!\n");
+                exit(0);
+            }
+            for (int i = 2; i != (*data).size(); i++){
+                if (std::get<2>(*(*data)[i]) == "<>"){
+                    m_code_generated += "!= ";
+                }
+                else if (std::get<2>(*(*data)[i]) == "="){
+                    m_code_generated += "== ";
+                }
+                else{m_code_generated += std::get<2>(*(*data)[i]) + " ";}
+            }
+            m_code_generated += ";\n";
             current->leftptr = new node;
             current->rightptr = new node;
             current->leftptr->dataptr = (*data)[0];
