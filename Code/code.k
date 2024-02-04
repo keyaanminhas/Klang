@@ -18,12 +18,13 @@ NUM1 <-- (1 + 3 -2*4)
 
 ENDIF
 
-DECLARE NAME : STRING
 
 NUM <-- 3.2
 NAME <--      "Keyaan Minhas"
 
-FOR COUNT <-- 100 TO 1 STEP 2
+FOR COUNT <-- 0 TO -5 STEP -1
+
+OUTPUT "HELLO" , NUM1 - 2
 
 NEXT
 

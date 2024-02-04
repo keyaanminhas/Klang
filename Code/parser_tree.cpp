@@ -22,13 +22,6 @@ ELSE
 ELSE IF <EXPRESSION>
 ENDIF
 
-CASE OF <IDENTIFIER>
-
-{{{
-OTHERWISE
-ENDCASE
-}}}
-future updates
 
 FOR IDENTIFIER = <NUM> TO <NUM>
 <STATEMENTS> / <EXPRESSIONS>
@@ -125,6 +118,9 @@ void Tree::_recurse_node(node* current, std::vector<std::tuple<int, std::string,
         current->dataptr = (*data)[0];
         if (std::get<2>(*(current->dataptr)) == "ENDIF"){m_code_generated += "}\n";m_IF_COUNT--;}
         else if (std::get<2>(*(current->dataptr)) == "ELSE"){m_code_generated += "}\nelse{\n";}
+        else if (std::get<2>(*(current->dataptr)) == "NEXT"){m_code_generated += "}\n";}
+        else if (std::get<2>(*(current->dataptr)) == "ENDWHILE"){m_code_generated += "}\n";}
+        else if (std::get<2>(*(current->dataptr)) == "REPEAT"){m_code_generated += "do{\n";}
 
         // std::cout << std::get<2>(*(current->dataptr)) << std::endl;
     }
@@ -365,9 +361,46 @@ void Tree::_recurse_node(node* current, std::vector<std::tuple<int, std::string,
                     break;
                 }
             }
+            std::string start = " (";
+            std::string end = " (";
+            std::string stepstr = " (";
+            int i = 3;
+
+            for (; i!= (*data).size()-1; i++){
+                if (std::get<2>(*(*data)[i]) == "TO"){
+                    break;
+                }
+                start += std::get<2>(*(*data)[i]) + " ";
+            }
+
+            i +=1;
+            start += ")";
+
             if (step == false){
+                for (; i!= (*data).size(); i++){
+                    end += std::get<2>(*(*data)[i]) + " ";
+                }
+                end += ")";
+                m_code_generated += "for (int " + std::get<2>(*(*data)[1]) + " = " + start + "; " + std::get<2>(*(*data)[1]) + " != " + "(" +  start + ">" + end + " ? " + end + " -1 : " + end + " +1 " + ")" + "; " + std::get<2>(*(*data)[1]) + " += 1){\n";
                 _recurse_node(current-> rightptr, result2);
             }
+            else{
+                for (; i!= (*data).size()-1; i++){
+                    if (std::get<2>(*(*data)[i]) == "STEP"){
+                        break;
+                    }
+                    end += std::get<2>(*(*data)[i]) + " ";
+                }
+                i+=1;
+                end += ")";
+                for (; i!= (*data).size(); i++){
+                    stepstr += std::get<2>(*(*data)[i]) + " ";
+                }
+                stepstr += ")";
+                m_code_generated += "for (int " + std::get<2>(*(*data)[1]) + " = " + start + "; " + std::get<2>(*(*data)[1]) + " != " + "(" +  start + ">" + end + " ? " + end + " -1 : " + end + " +1 " + ")" + "; " + std::get<2>(*(*data)[1]) + " += " + stepstr + "){\n";
+
+            }
+            // std::cout << "start "<< start << "\n" << "stop " << end << "\n" << "step " << stepstr << "\n" << std::endl;
         }
         else if (std::get<2>(*(*data)[0]) == "STEP"){
             current->rightptr = new node;
@@ -387,6 +420,18 @@ void Tree::_recurse_node(node* current, std::vector<std::tuple<int, std::string,
                 exit(0);      
             }
 
+            m_code_generated += "while ( ";
+            for (int i = 1; i != (*data).size()-1; i++){
+                if (std::get<2>(*(*data)[i]) == "<>"){
+                    m_code_generated += "!= ";
+                }
+                else if (std::get<2>(*(*data)[i]) == "="){
+                    m_code_generated += "== ";
+                }
+                else{m_code_generated += std::get<2>(*(*data)[i]) + " ";}
+            }
+
+            m_code_generated += "){\n";
 
 
             current->rightptr = new node;
@@ -401,6 +446,17 @@ void Tree::_recurse_node(node* current, std::vector<std::tuple<int, std::string,
         }
         else if (std::get<2>(*(*data)[0]) == "UNTIL"){
 
+            m_code_generated += "} while ( ";
+            for (int i = 1; i != (*data).size(); i++){
+                if (std::get<2>(*(*data)[i]) == "<>"){
+                    m_code_generated += "!= ";
+                }
+                else if (std::get<2>(*(*data)[i]) == "="){
+                    m_code_generated += "== ";
+                }
+                else{m_code_generated += std::get<2>(*(*data)[i]) + " ";}
+            }
+            m_code_generated += ");\n";
 
             current->rightptr = new node;
             current->leftptr = new node;
