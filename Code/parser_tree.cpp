@@ -123,7 +123,9 @@ void Tree::_recurse_node(node* current, std::vector<std::tuple<int, std::string,
     std::cout << std::endl;
     if ((*data).size() == 1){
         current->dataptr = (*data)[0];
-        if (std::get<2>(*(current->dataptr)) == "ENDIF"){m_IF_COUNT--;}
+        if (std::get<2>(*(current->dataptr)) == "ENDIF"){m_code_generated += "}\n";m_IF_COUNT--;}
+        else if (std::get<2>(*(current->dataptr)) == "ELSE"){m_code_generated += "}\nelse{\n";}
+
         // std::cout << std::get<2>(*(current->dataptr)) << std::endl;
     }
     else{
@@ -138,8 +140,8 @@ void Tree::_recurse_node(node* current, std::vector<std::tuple<int, std::string,
                 for (int i = 0; i!= m_var_list.size(); i++ ){
                     if (std::get<0>(m_var_list[i]) == std::get<2>(*(*data)[1])){
                         flag = true;
-                        if (std::get<1>(m_var_list[i]) == "STR"){m_code_generated = m_code_generated + "std::getline(std::cin," + std::string(std::get<1>(m_var_list[i])) + ");\n";}
-                        else if (std::get<1>(m_var_list[i]) == "INT" || std::get<1>(m_var_list[i]) == "REAL"){m_code_generated = m_code_generated + "std::cin >> " + std::get<1>(m_var_list[i]) + ";\n";}
+                        if (std::get<1>(m_var_list[i]) == "STRING"){m_code_generated += "std::getline(std::cin," + std::string(std::get<0>(m_var_list[i])) + ");\n";}
+                        else if (std::get<1>(m_var_list[i]) == "INTEGER" || std::get<1>(m_var_list[i]) == "REAL"){m_code_generated = m_code_generated + "std::cin >> " + std::get<0>(m_var_list[i]) + ";\n";}
                     }
                 }
                 if (flag == false){
@@ -156,17 +158,24 @@ void Tree::_recurse_node(node* current, std::vector<std::tuple<int, std::string,
             }
         }
         else if (std::get<2>(*(*data)[0]) == "OUTPUT"){
-
+            m_code_generated += "std::cout << ";
             for (int i = 1; i!= (*data).size(); i++){
                 if (std::get<1>(*(*data)[i]) == "KW"){
                     std::cout << std::string("ERROR -Line[") << std::to_string(std::get<0>(*(*data)[0])) << std::string("]: Keyword 'OUTPUT' doesnt take Keywords!\n");
                     exit(0);
                 }
                 else if (std::get<1>(*(*data)[i]) == "ID"){
-                    for (int i = 0; i != m_var_list.size(); i++){
-                        if (std::get<0>(m_var_list[i]) == std::get<2>(*(*data)[i])){
-                            m_code_generated = m_code_generated + std::get<2>(*(*data)[i]);
+                    bool found = false;
+                    for (int j = 0; j != m_var_list.size(); j++){
+                        if (std::get<0>(m_var_list[j]) == std::get<2>(*(*data)[i])){
+                            m_code_generated += std::get<2>(*(*data)[i]);
+                            found = true;
+                            break;
                         }
+                    }
+                    if (found == false){
+                        std::cout << std::string("ERROR -Line[") << std::to_string(std::get<0>(*(*data)[0])) << std::string("]: Variable missing delaration!\n");
+                        exit(0);
                     }
                 }
                 else if (std::get<2>(*(*data)[i]) == ","){
@@ -197,6 +206,24 @@ void Tree::_recurse_node(node* current, std::vector<std::tuple<int, std::string,
                 exit(0);
       
             }
+
+            std::string data_type = std::get<2>(*(*data)[(*data).size()-1]);
+            std::cout << data_type << std::endl;
+            if (data_type == "INTEGER"){
+                m_code_generated += "int ";
+            }
+            else if (data_type == "STRING"){
+                m_code_generated += "std::string ";
+            }
+            else if (data_type == "REAL"){
+                m_code_generated += "float ";
+            }
+            else if (data_type == "BOOLEAN"){
+                m_code_generated += "bool ";
+            }
+            else if (data_type == "CHAR"){
+                m_code_generated += "char ";
+            }
             bool comma = false;
             for (int i = 1; i!= (*data).size()-2; i++){
                 if (std::get<1>(*(*data)[i]) == "KW"){
@@ -222,8 +249,12 @@ void Tree::_recurse_node(node* current, std::vector<std::tuple<int, std::string,
                         comma = false;
                     } 
                 }
-
+                m_code_generated += std::get<2>(*(*data)[i]);
+                if (std::get<2>(*(*data)[i]) != ","){
+                    m_var_list.push_back(std::tuple<std::string, std::string>{std::get<2>(*(*data)[i]), data_type});
+                }
             }
+            m_code_generated += ";\n";
             current->leftptr = new node;
             current->rightptr = new node;
             std::vector<std::tuple<int, std::string, std::string> *> * result1 = new std::vector<std::tuple<int, std::string, std::string> *>;
@@ -238,12 +269,21 @@ void Tree::_recurse_node(node* current, std::vector<std::tuple<int, std::string,
                 std::cout << std::string("ERROR -Line[") << std::to_string(std::get<0>(*(*data)[0])) << std::string("]: Keyword 'IF' expected an expression and keyword 'THEN'!\n");
                 exit(0);              
             }
+            m_code_generated += "if (";
             for (int i = 1; i!= (*data).size()-1; i++){
                 if (std::get<1>(*(*data)[i]) == "KW"){
                     std::cout << std::string("ERROR -Line[") << std::to_string(std::get<0>(*(*data)[0])) << std::string("]: Keyword 'IF' got a Keyword instead of an Expression!\n");
                     exit(0);
                 }
+                if (std::get<2>(*(*data)[i]) == "<>"){
+                    m_code_generated += "!=";
+                }
+                else if (std::get<2>(*(*data)[i]) == "="){
+                    m_code_generated += "==";
+                }
+                else{m_code_generated += std::get<2>(*(*data)[i]);}
             }
+            m_code_generated += "){\n";
             m_IF_COUNT ++;
             current->leftptr = new node;
             current->rightptr = new node;
@@ -257,9 +297,10 @@ void Tree::_recurse_node(node* current, std::vector<std::tuple<int, std::string,
         else if (std::get<2>(*(*data)[0]) == "ELSE" && std::get<2>(*(*data)[1]) == "IF" ) 
         {
             if (std::get<2>(*(*data)[data->size() - 1]) != "THEN"){
-                std::cout << std::string("ERROR -Line[") << std::to_string(std::get<0>(*(*data)[0])) << std::string("]: Keyword 'ELSE IF' expected an expression and keyword 'THEN'!\n");
+                std::cout << std::string("ERROR -Line[") << std::to_string(std::get<0>(*(*data)[0])) << std::string("]: Keyword 'ELSE IF' expected an expression and Keyword 'THEN'!\n");
                 exit(0);              
             }
+            m_code_generated += "}\nelse if (";
             std::vector<std::tuple<int, std::string, std::string> *> * result1 = new std::vector<std::tuple<int, std::string, std::string> *>;
             for (int i = 2; i!= (*data).size()-1; i++){
                 if (std::get<1>(*(*data)[i]) == "KW"){
@@ -267,9 +308,17 @@ void Tree::_recurse_node(node* current, std::vector<std::tuple<int, std::string,
                     exit(0);
                 }
                 else{
-                    result1->push_back((*data)[i]);
+                    if (std::get<2>(*(*data)[i]) == "<>"){
+                        m_code_generated += "!=";
+                    }
+                    else if (std::get<2>(*(*data)[i]) == "="){
+                        m_code_generated += "==";
+                    }
+                    else{m_code_generated += std::get<2>(*(*data)[i]);}
+                        result1->push_back((*data)[i]);
                 }
             }
+            m_code_generated += "){\n";
             current->leftptr = new node;
             current->rightptr = new node;
 
@@ -283,8 +332,8 @@ void Tree::_recurse_node(node* current, std::vector<std::tuple<int, std::string,
             _recurse_node(current->rightptr->rightptr, result1);
         }
         else if (std::get<2>(*(*data)[0]) == "ELSE" && std::get<2>(*(*data)[1]) != "IF" ){
-            std::cout << std::string("ERROR -Line[") << std::to_string(std::get<0>(*(*data)[0])) << std::string("]: Keyword 'ELSE' does not take any parameters!\n");
-            exit(0);
+                std::cout << std::string("ERROR -Line[") << std::to_string(std::get<0>(*(*data)[0])) << std::string("]: Keyword 'ELSE' did not expect an Expression!\n");
+                exit(0);  
         }
         else if (std::get<2>(*(*data)[0]) == "FOR"){
             if (std::get<1>(*(*data)[1]) != "ID"){

@@ -33,7 +33,7 @@ class Tree{
     short int m_IF_COUNT = 0;
     short int m_WHILE_COUNT = 0;
     std::string m_code_generated="";
-    std::vector<std::tuple<std::string, std::string>>m_var_list;
+    std::vector<std::tuple<std::string, std::string>>m_var_list; // VARNAME, VARTYPE
     void _recurse_node(node* current, std::vector<std::tuple<int, std::string, std::string> *>* data);
     void _recurse_base_node(base_node* current);
     void vec_split(std::vector<std::tuple<int, std::string, std::string> *>* arr, int till, std::vector<std::tuple<int, std::string, std::string> *>*  result1, std::vector<std::tuple<int, std::string, std::string> *>*  result2);
