@@ -2,7 +2,7 @@
 #include <vector>
 #include <tuple>
 #include <fstream>
-
+#include <cstdio>
 #include "lexer.h"
 #include "parser_tree.h"
 
@@ -58,5 +58,13 @@ int main(){
     Tree main_tree(TOKEN_LIST);
     // main_tree.lines_display();
     main_tree.create();
+    main_tree.m_code_generated += "std::getchar();\nstd::getchar();\nreturn 1;\n}";
+    std::cout << main_tree.m_code_generated << std::endl;
+    std::ofstream tempFile("temp.cpp");
+    tempFile << main_tree.m_code_generated;
+    tempFile.close();
+    system("g++ temp.cpp -o program");
+    std::remove("temp.cpp");
+    // system("program.exe");
     return 0;
 }

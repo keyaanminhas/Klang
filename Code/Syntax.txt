@@ -14,15 +14,15 @@ IDENTIFIER:
     - Case Sensitive
 
 
+
+
 DECLARATION:
     - DECLARE <IDENTIFIER> : <DATA_TYPE>
     - DECLARE Name : STRING
     - DECLARE Age : INTEGER
 
 
-CONSTANT:
-    - CONSTANT <IDENTIFIER> = <VALUE>
-    - CONSTANT DefaultText = "N/A"
+
 
 
 ASSIGNMENT:
@@ -32,44 +32,6 @@ ASSIGNMENT:
     - <IDENTIFIER> = <VALUE>
     - Counter = Counter + 1
 
-
-ARRAYS:
-    - DECLARE <IDENTIFIER> : ARRAY[<l>:<u>] OF <DATA_TYPE>
-    - DECLARE StudentNames : ARRAY[1:30] OF STRING
-
-    - DECLARE <IDENTIFIER> : ARRAY[<l1>:<u1>,<l2>:<u2>] OF <DATA_TYPE>
-    - DECLARE NoughtsAndCrosses : ARRAY[1:3,1:3] OF CHAR
-
-    - StudentNames[1] <-- "Ali"
-    - NoughtsAndCrosses[2,3] = ꞌXꞌ
-    - StudentNames[n+1] <-- StudentNames[n] 
-    - SavedGame <-- NoughtsAndCrosses
-
-
-STRUCTS:
-    TYPE <identifier1>
-    DECLARE <identifier2> : <data type>
-    DECLARE <identifier3> : <data type>
-    ...
-    ENDTYPE
-
-    TYPE Student
-    DECLARE Surname : STRING
-    DECLARE FirstName : STRING
-    DECLARE DateOfBirth : DATE
-    DECLARE YearGroup : INTEGER
-    DECLARE FormGroup : CHAR
-    ENDTYPE
-
-    DECLARE Pupil1 : Student
-    DECLARE Pupil2 : Student
-    DECLARE Form : ARRAY[1:30] OF Student
-
-    Pupil1.Surname <-- "Johnson"
-    Pupil1.Firstname <-- "Leroy"
-    Pupil1.DateOfBirth = 02/01/2005
-    Pupil1.YearGroup = 6
-    Pupil1.FormGroup = ꞌAꞌ
 
 
 
@@ -109,14 +71,6 @@ IF THEN ELSE:
 
 
 
-CASE STATEMENTS:
-    CASE OF <identifier>
-    <value 1> : <statement>
-    <value 2> : <statement>
-    ...
-    OTHERWISE <statement>
-    ENDCASE
-
 
 
 LOOPS:
@@ -139,6 +93,23 @@ LOOPS:
 
 
 
+## FEATURES COMING SOON
+
+
+ARRAYS:
+    - DECLARE <IDENTIFIER> : ARRAY[<l>:<u>] OF <DATA_TYPE>
+    - DECLARE StudentNames : ARRAY[1:30] OF STRING
+
+    - DECLARE <IDENTIFIER> : ARRAY[<l1>:<u1>,<l2>:<u2>] OF <DATA_TYPE>
+    - DECLARE NoughtsAndCrosses : ARRAY[1:3,1:3] OF CHAR
+
+    - StudentNames[1] <-- "Ali"
+    - NoughtsAndCrosses[2,3] = ꞌXꞌ
+    - StudentNames[n+1] <-- StudentNames[n] 
+    - SavedGame <-- NoughtsAndCrosses
+
+
+
 PROCEDURE:
     PROCEDURE <identifier>(<param1>:<datatype>,<param2>:<datatype>...)
         <statements>
@@ -156,3 +127,16 @@ FUNCTIONS:
 
 
 
+STRUCTS:
+    TYPE <identifier1>
+    DECLARE <identifier2> : <data type>
+    DECLARE <identifier3> : <data type>
+    ...
+    ENDTYPE
+
+    TYPE Student
+    DECLARE Surname : STRING
+    DECLARE FirstName : STRING
+
+    Pupil1.Surname <-- "Johnson"
+    Pupil1.Firstname <-- "Leroy"

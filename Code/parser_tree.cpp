@@ -60,8 +60,8 @@ Tree::Tree(TOKEN_TYPE TOKENS){
 
 Tree::~Tree(){
     std::cout << "\n\n\n\n\n\n";
-
-    std::cout << m_code_generated << std::endl; 
+    // std::cout << m_code_generated << std::endl;
+    // system(("g++ -x c++ -o my_program my_program.cpp && ./my_program <<< \"" + m_code_generated + "\"").c_str());
 
     for (int i = 0; i != m_lines.size() ; i++){
         delete m_base_nodes[i];
@@ -318,12 +318,18 @@ void Tree::_recurse_node(node* current, std::vector<std::tuple<int, std::string,
                 }
                 else{
                     if (std::get<2>(*(*data)[i]) == "<>"){
-                        m_code_generated += "!=";
+                        m_code_generated += " != ";
                     }
                     else if (std::get<2>(*(*data)[i]) == "="){
-                        m_code_generated += "==";
+                        m_code_generated += " == ";
                     }
-                    else{m_code_generated += std::get<2>(*(*data)[i]);}
+                    else if (std::get<2>(*(*data)[i]) == "OR"){
+                        m_code_generated += " ||  ";
+                    }
+                    else if (std::get<2>(*(*data)[i]) == "AND"){
+                        m_code_generated += " &&  ";
+                    }
+                    else{m_code_generated += std::get<2>(*(*data)[i]) + " ";}
                         result1->push_back((*data)[i]);
                 }
             }
@@ -357,7 +363,7 @@ void Tree::_recurse_node(node* current, std::vector<std::tuple<int, std::string,
             current->leftptr = new node;
             current->rightptr = new node;
             vec_split(data, 1, result1, result2);
-            _recurse_node(current->leftptr, result1);
+            // _recurse_node(current->leftptr, result1);
 
             bool step = false;
 
@@ -369,8 +375,8 @@ void Tree::_recurse_node(node* current, std::vector<std::tuple<int, std::string,
                     vec_split(result2, i, result3, result4);
                     current->rightptr->leftptr = new node;
                     current->rightptr->rightptr = new node;
-                    _recurse_node(current->rightptr->leftptr, result3);
-                    _recurse_node(current->rightptr->rightptr, result4);
+                    // _recurse_node(current->rightptr->leftptr, result3);
+                    // _recurse_node(current->rightptr->rightptr, result4);
 
                     step = true;
                     break;
@@ -397,7 +403,7 @@ void Tree::_recurse_node(node* current, std::vector<std::tuple<int, std::string,
                 }
                 end += ")";
                 m_code_generated += "for (int " + std::get<2>(*(*data)[1]) + " = " + start + "; " + std::get<2>(*(*data)[1]) + " != " + "(" +  start + ">" + end + " ? " + end + " -1 : " + end + " +1 " + ")" + "; " + std::get<2>(*(*data)[1]) + " += 1){\n";
-                _recurse_node(current-> rightptr, result2);
+                // _recurse_node(current-> rightptr, result2);
             }
             else{
                 for (; i!= (*data).size()-1; i++){
@@ -438,10 +444,16 @@ void Tree::_recurse_node(node* current, std::vector<std::tuple<int, std::string,
             m_code_generated += "while ( ";
             for (int i = 1; i != (*data).size()-1; i++){
                 if (std::get<2>(*(*data)[i]) == "<>"){
-                    m_code_generated += "!= ";
+                    m_code_generated += " != ";
                 }
                 else if (std::get<2>(*(*data)[i]) == "="){
-                    m_code_generated += "== ";
+                    m_code_generated += " == ";
+                }
+                else if (std::get<2>(*(*data)[i]) == "OR"){
+                    m_code_generated += " ||  ";
+                }
+                else if (std::get<2>(*(*data)[i]) == "AND"){
+                    m_code_generated += " &&  ";
                 }
                 else{m_code_generated += std::get<2>(*(*data)[i]) + " ";}
             }
@@ -461,17 +473,23 @@ void Tree::_recurse_node(node* current, std::vector<std::tuple<int, std::string,
         }
         else if (std::get<2>(*(*data)[0]) == "UNTIL"){
 
-            m_code_generated += "} while ( ";
+            m_code_generated += "} while (!( ";
             for (int i = 1; i != (*data).size(); i++){
                 if (std::get<2>(*(*data)[i]) == "<>"){
-                    m_code_generated += "!= ";
+                    m_code_generated += " != ";
                 }
                 else if (std::get<2>(*(*data)[i]) == "="){
-                    m_code_generated += "== ";
+                    m_code_generated += " == ";
+                }
+                else if (std::get<2>(*(*data)[i]) == "OR"){
+                    m_code_generated += " ||  ";
+                }
+                else if (std::get<2>(*(*data)[i]) == "AND"){
+                    m_code_generated += " &&  ";
                 }
                 else{m_code_generated += std::get<2>(*(*data)[i]) + " ";}
             }
-            m_code_generated += ");\n";
+            m_code_generated += "));\n";
 
             current->rightptr = new node;
             current->leftptr = new node;
@@ -522,6 +540,7 @@ void Tree::_recurse_node(node* current, std::vector<std::tuple<int, std::string,
 void Tree::_recurse_base_node(base_node* current){
     (*current).start = new node;
     Tree::_recurse_node(current->start, current->root);
+
 }
 
 // void Tree::tree_display(){

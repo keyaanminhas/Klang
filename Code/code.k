@@ -1,38 +1,44 @@
-DECLARE NUM1 , NUM2 , NUM3 , NUM4 : INTEGER
+DECLARE Fact : INTEGER
+DECLARE num : INTEGER
+DECLARE name : STRING
+
+OUTPUT "WHAT IS YOUR NAME"
+INPUT name
 
 
-INPUT NUM1
-DECLARE NAME, HELLO : STRING
-DECLARE NUM : INTEGER
-OUTPUT "THIS IS A NUMBER: ", NUM1
+OUTPUT "HELLO, ", name, "\n", "ENTER A NUMBER FOR FACTORIAL: "
+INPUT num
+
+Fact <-- 1
 
 
-IF NUM1 <> 3 THEN
-NUM1 <-- NUM1-1
+IF num < 0 THEN
+    OUTPUT -1
 
-
-ELSE IF NUM1 > NUM2 THEN
-NUM2 <-- NUM1
+ELSE IF num = 1 OR num = 0 THEN
+    OUTPUT 1
 
 ELSE
-NUM1 <-- (1 + 3 -2*4)
-
+    FOR Count <-- 1 TO num
+        Fact <-- Fact * Count
+    NEXT
+    OUTPUT Fact
 ENDIF
 
-
-NUM <-- 3.2
-NAME <--      "Keyaan Minhas"
-
-FOR COUNT <-- 0 TO -5 STEP -1
-
-OUTPUT "HELLO" , NUM1 - 2
-
-NEXT
-
-WHILE X <> 5 DO
-HELLO <-- "KEYAAN"
-ENDWHILE
-
+DECLARE stop, start : INTEGER
+stop <-- 5
+start <-- 0
 REPEAT
+    OUTPUT start
+    start <-- start + 1
+UNTIL start == stop
 
-UNTIL X <> 5
+DECLARE flag : BOOLEAN
+
+flag <-- false
+
+IF flag = false THEN
+    OUTPUT "FLAG WAS FALSE"
+ELSE
+    OUTPUT "Flag was TRUE"
+ENDIF
